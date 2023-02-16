@@ -3,12 +3,6 @@ const express = require("express");
 const ObjectId = express.ObjectId;
 const mongoosePaginate = require("mongoose-paginate-v2");
 
-// answers: [{  
-//   questionId: { type: mongoose.Schema.Types.ObjectId, ref: 'SurveyForm' },  
-//   type: { type: String, required: true }, 
-//   answer: [String]  
-// }
-// ];
 
 var ResponseSchema = new mongoose.Schema({
   formId: { type: mongoose.Schema.Types.ObjectId, ref: "Form" },
@@ -17,8 +11,8 @@ var ResponseSchema = new mongoose.Schema({
     {
       type:Array
     },
-  
-});
+},{ timestamps: true }
+);
 
 ResponseSchema.plugin(mongoosePaginate);
 const Response = mongoose.model("Response", ResponseSchema, "Response");

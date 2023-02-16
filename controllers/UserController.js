@@ -98,7 +98,7 @@ router.get("/alreadyExist/:id", async (req,res) => {
       res.status(201).send("No Form exist");
     }
   } catch (error) {
-    console.error(error);
+    
     return null;
   }
 })

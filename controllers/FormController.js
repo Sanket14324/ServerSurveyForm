@@ -1,6 +1,6 @@
 const express = require("express");
 const Form = require("../model/Form");
-
+const Response = require("../model/Response")
 const router1 = express.Router();
 
 // Get all forms
@@ -13,6 +13,7 @@ router1.get("/forms", (req, res) => {
   });
 });
 
+
 // Get a specific form
 router1.get("/getforms/:id", (req, res) => {
   Form.findById(req.params.id, (err, form) => {
@@ -23,6 +24,7 @@ router1.get("/getforms/:id", (req, res) => {
   });
 });
 
+
 //delete form
 router1.delete("/deleteform/:id", (req, res) => {
   var myquery = { _id: req.params.id };
@@ -30,8 +32,18 @@ router1.delete("/deleteform/:id", (req, res) => {
         if (err){
           return res.status(500).send(err);
         }
-        return res.send("successfully deleted");
+        
       });
+
+  var query = {formId : req.params.id};
+  // deleting all responses according to responses
+  Response.deleteMany(query, (err, result) => {
+    if(err){
+      return res.status(500).send(err);
+    }
+
+    return res.status(200).send("deleted");
+  })
 
 
 })
