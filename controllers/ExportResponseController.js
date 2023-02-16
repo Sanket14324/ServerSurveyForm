@@ -21,13 +21,13 @@ router.get('/responses/:id', async (req, res) => {
             if (i < 1) {
                 response.responses.forEach(resp => {
                     emailArray.push(response.email);
+                    timeArray.push(response.createdAt);
                     temp.push(resp.question);
-                    // timeArray.push(response.createdAt);
-                    // temp.push(resp.)
                 });
             }else{
                 response.responses.forEach(resp => {
                     emailArray.push(response.email);
+                    timeArray.push(response.createdAt)
                 });
             }
             i = i + 1;
@@ -39,6 +39,7 @@ router.get('/responses/:id', async (req, res) => {
         responsesLocal.forEach(response => {
             const arr = [];
             arr.push(emailArray[j]);
+            arr.push(timeArray[j])
             
             response.responses.forEach(resp => {
                 arr.push(resp.answer);
