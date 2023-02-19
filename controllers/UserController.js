@@ -103,4 +103,23 @@ router.get("/alreadyExist/:id", async (req,res) => {
   }
 })
 
+router.get("/getusername/:id", async (req, res) => {
+    try {
+      const userId = req.params.id;
+      await User.findById(userId, function (err, docs) {
+        if (err){
+            
+            return res.status(201).send("no user found");
+        }
+        else{
+           
+            return res.status(200).send(docs.name);
+        }
+    });
+    }
+    catch(err){
+      return null;
+    }
+})
+
 module.exports = router;

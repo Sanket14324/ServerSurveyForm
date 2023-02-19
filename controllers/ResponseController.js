@@ -8,45 +8,71 @@ const router2 = express.Router();
 // You have to give form ID
 //Take responses of specific form
 
-router2.get('/form/responses/:id', async(req, res) =>{
+router2.get('/form/responses/:id', async (req, res) => {
 
-  try{
-    
+  try {
+
     const formId = req.params.id;
     const response = await Response.find({ formId });
 
-    if(response){
+    if (response) {
       res.status(200).send(response);
     }
-    else{
+    else {
       res.status.apply(201).send("No response exist");
     }
   }
-  catch(error){
-    
+  catch (error) {
+
     return null;
   }
 
 })
 
 
-router2.post("/forms/responses/:id", (req, res) => {
- 
-  var questionArray = req.body.formData.questions;
-  const responsesArray = questionArray.map((que) => {
-     return {"question": que.questionText, "answer":que.ans};
-  })
-  const response = new Response({
-    formId: req.params.id,
-    email : req.body.formData.email,
-    responses: responsesArray,
-  });
-  response.save((err, savedResponse) => {
-    if (err) {
-      return res.status(500).send(err);
-    }
-    return res.status(200).json(savedResponse);
-  });
+router2.post("/forms/responses/:id", async (req, res) => {
+
+  const response = await Response.findOne({ formId: req.params.id, email :  req.body.formData.email });
+  
+  if (response) {
+    return res.status(401).send("Unauthorized user");
+  }
+  else {
+    
+    var questionArray = req.body.formData.questions;
+    const responsesArray = questionArray.map((que) => {
+      if (typeof (que.ans) === 'string') {
+        return { "question": que.questionText, "answer": que.ans };
+      }
+      else {
+        let answers = "";
+        que.ans.forEach(element => {
+          if (answers === "") {
+            answers = answers + element
+          }
+          else {
+            answers = answers + "," + element;
+          }
+
+        });
+
+        return { "question": que.questionText, "answer": answers }
+      }
+
+
+    })
+    const response = new Response({
+      formId: req.params.id,
+      email: req.body.formData.email,
+      responses: responsesArray,
+    });
+    response.save((err, savedResponse) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      return res.status(200).send("Success");
+    });
+  }
 });
 
 
